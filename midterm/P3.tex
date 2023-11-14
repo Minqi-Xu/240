@@ -1,0 +1,45 @@
+\documentclass[12pt]{article}
+
+%\usepackage{algo}
+\usepackage{tikz,fullpage,url,amssymb,amsmath,epsfig,color,xspace,alltt,mathtools}
+\usetikzlibrary{shapes,chains,positioning}
+\usepackage[pdftitle={CS 240 Assignment 2},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+%\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf Problem 3}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	When we construct the heap, we can connect a ordering value for each element that we insert. (i.e. the first inserted item with order value 1, the sencond with order value 2, etc.). Then when we maintain the ordering property during the heapsort(actually when fixing-down), to let the algorithm to be stable, we just need to do a additional comparison based on their ordering value if the key of two items are the same.
+	
+	The correctness and the running time of the algorithm is exactly same as the original heapsort. This is because we just add few comparison in some special steps. The correctness is based on the correctness of the heapsort. And for the correctness of the stable, the reason we add ordering value is to make sure the order of the elements that have the same key in output(new rearrange array) is the same as the original one. And the efficiency won't change since we add some constant time in some special steps of iteration.
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

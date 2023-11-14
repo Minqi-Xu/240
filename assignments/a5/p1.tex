@@ -1,0 +1,73 @@
+\documentclass[12pt]{article}
+\usepackage{algpseudocode} 
+\usepackage{fullpage,url,amssymb,epsfig,color,xspace,tikz,amsmath}
+\usetikzlibrary{shapes,positioning,calc,chains}
+\usepackage[pdftitle={CS 240 Assignment 5},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+% \snode{ID}{NUMBER} becomes \node{ID}[item]{\ensuremath{NUMBER}}
+\newcommand{\snode}[2]{\node(#1)[item]{\ensuremath{#2}}}
+
+% \nodelabel{SUBSCRIPT} becomes \node[label]{\ensuremath{S_SUBSCRIPT}}
+\newcommand{\nodelabel}[1]{\node[label]{\ensuremath{S_#1}}}
+
+\newcommand{\quesbox}[2]{\begin{center} \framebox[.5\textwidth]{%
+			\raisebox{-5mm}[0mm][#1]{\begin{minipage}[t]{.45\textwidth}%
+					{\normalsize\sf #2}{\phantom{ans}}\end{minipage}}} \end{center}}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+\definecolor{typo}{rgb}{0.75,0,0}
+\definecolor{care}{rgb}{0,0,0}
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf Assignment 5 Problem 1}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Problem 1
+	
+	
+	\begin{itemize}
+		\part{a} Draw a 2-dimensional range tree of minimal height for the following set of points:
+		\begin{center}
+			$\{(7, 88), (12, 19), (22, 33), (27, 29), (28, 9), (31, 99), (42, 66)\}$ 
+		\end{center}
+		
+		\part{b} Suppose a two dimensional range tree data structure stores $n$ points, and that the BST ordered by $x$-coordinates is perfect, i.e., every level is completely filled.
+		Give an exact closed form formula in terms of $n$ for the sum of the number of nodes in the $x$-ordered BST plus the total number of nodes in all $y$-ordered BSTs.
+		
+		\part{c} Assume that we have a set of $n$ numbers (not necessarily integers) and we are interested only in counting the number of points that lie in a range rather than in reporting all of them.
+		Describe how a 1-dimensional range tree (i.e., a balanced BST) can be modified such that a range counting query can be performed in $O(\log n)$ time (independent of $s$).  
+		Briefly justify that your algorithm is within the expected runtime.
+		
+		\part{d} Next, consider the 2-dimensional case where we have a set of $n$ 2-dimensional points.
+		Given a query rectangle $R$, we only want to find the number of points inside $R$, not the points themselves.
+		Explain how to modify the Range Tree data structure and the search algorithm such that counting queries can be performed in $O((\log n)^2))$ time.  
+		Briefly justify that your algorithm meets the runtime requirement.
+		
+	\end{itemize}
+	
+	
+	%%% END OF QUESTIONS %%%
+\end{document}

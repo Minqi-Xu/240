@@ -1,0 +1,83 @@
+\documentclass[12pt]{article}
+\usepackage{algpseudocode} 
+\usepackage{fullpage,url,amssymb,epsfig,color,xspace,tikz,amsmath}
+\usetikzlibrary{shapes,positioning,calc,chains}
+\usepackage[pdftitle={CS 240 Assignment 4},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+% \snode{ID}{NUMBER} becomes \node{ID}[item]{\ensuremath{NUMBER}}
+\newcommand{\snode}[2]{\node(#1)[item]{\ensuremath{#2}}}
+
+% \nodelabel{SUBSCRIPT} becomes \node[label]{\ensuremath{S_SUBSCRIPT}}
+\newcommand{\nodelabel}[1]{\node[label]{\ensuremath{S_#1}}}
+
+\newcommand{\quesbox}[2]{\begin{center} \framebox[.5\textwidth]{%
+			\raisebox{-5mm}[0mm][#1]{\begin{minipage}[t]{.45\textwidth}%
+					{\normalsize\sf #2}{\phantom{ans}}\end{minipage}}} \end{center}}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+\definecolor{typo}{rgb}{0.75,0,0}
+\definecolor{care}{rgb}{0,0,0}
+\begin{document}
+	
+	\begin{center}
+		
+		{\Large\bf Assignment 4 Problem 4}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Problem 4
+	
+	For all parts of this question, use the convention that each internal node of a quadtree has exactly four children, corresponding to regions NE, NW, SW and SE, in that order.  Also, as stated in Module 8 Slide 6, the bounding box must be the smallest box containing all points where the width and height are a power of 2.
+	
+	\begin{itemize}
+		\part{a} Give three 2-dimensional points such that the corresponding quadtree has height at least 50.
+		Give the $(x,y)$ coordinates of the three points and show the shape of the quadtree; i.e. you do not need to show every level in the quadtree but show enough so the missing levels can be inferred. (Do not give the plane partitions.)
+		
+		\part{b} One application of quadtrees is image compression.  An image (picture) is recursively
+		divided into quadrants until the entire quadrant is only one colour.  Using this rule, draw the quadtree
+		of the following image.  There are only three colours (shades of grey). For the leaves of the quad tree,
+		use 1 to denote the lightest shade, 2 for the middle shade and 3 for the darkest shade of grey.
+		
+		%		\hfill\includegraphics{qtimage.jpg}\hspace*{\fill}
+		
+		\part{c} Another application is to compare two images.  Given two black and white images (i.e. each pixel of the image is either 0 or 1)
+		each of size $2^k \times 2^k$ stored as quadtrees, give an algorithm for the Intersection operation: if corresponding pixels in both images is 1, then their intersection is 1; otherwise 0.
+		
+		Runtime analysis is not required but your algorithm should be as efficient as possible; i.e. marks may be deducted for terribly inefficient implementations.
+		
+	\end{itemize}
+	
+	
+	solution:
+	\begin{enumerate}
+		\part{a} 
+		
+		\part{b} 
+		
+		\part{c} Given two images A and B which are two quadtree, then\\
+		We do the tranverse on both quadtree at the same time. Compare each nodes of the quadtree(starting from root), if for A it is not a leaf, then we check B, if for B it is a leaf, then returns 0,if not then we check recursively on its children. When checking its children, if any of children returns 0, then we returns 0 immediately, if no children returns 0, we return 1. If for A it is a leaf, then we check B, if for B it is not a leaf or it is a leaf but with a different number, then returns 0, otherwise, we just return 1..
+		
+		
+	\end{enumerate}
+	
+\end{document}

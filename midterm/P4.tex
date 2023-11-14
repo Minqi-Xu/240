@@ -1,0 +1,85 @@
+\documentclass[12pt]{article}
+
+%\usepackage{algo}
+\usepackage{tikz,fullpage,url,amssymb,amsmath,epsfig,color,xspace,alltt,mathtools}
+\usetikzlibrary{shapes,chains,positioning}
+\usepackage[pdftitle={CS 240 Assignment 2},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+%\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf Problem 4}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	a)
+	
+	We need to show that for all constants c $>$ 0, there exists a constants $n_0 > 0$ such that $15+7n \leq c*n\log n$ for all $n \geq n_0$
+	
+	
+	Let $c>0$ be given,
+	\begin{center}
+		\begin{align*}
+			15+7n \leq 15n &\leq \frac{15}{\log n} n \log n \quad \forall n \geq 2\\
+			&\leq c*n\log n
+		\end{align*}
+	\end{center}
+	Thus, $c \geq \frac{15}{\log n}$\\
+	For any c, we choose $n_0 = 2^{\frac{15}{c}}$\\
+	
+	
+	b)
+	
+	$f(n) \in \Theta(n^{\frac{3}{2}})$
+	
+	$g(b) \in \Theta(n(\log n)^2)$
+	
+	Let $L =\lim_{n->\infty} \frac{f(n)}{g(n)} =\lim_{n->\infty} \frac{n^\frac{3}{2}}{n(\log n)^2} =\lim_{n->\infty} \frac{\sqrt{n}}{(\log n)^2} = 0$
+	
+	Therefore, $f(n) \in o(g(n))$\\
+	
+	
+	c)
+	
+	$\sum_{i = 1}^{n-1} \sum_{j=1}^{n} \sum_{k=i}^{j} 1 + \Theta(\log n) + \Theta(\frac{n}{4}) = \sum_{i = 1}^{n-1} \sum_{j=i}^{n} (j-i+1) + \Theta(\log n) + \Theta(\frac{n}{4})$\\
+	$=\sum_{i = 1}^{n-1} \frac{(n+1-i)(n+2-i)}{2} + \Theta(\log n) + \Theta(\frac{n}{4}) \in \Theta(n^3) $\\
+	
+	
+	d)
+	
+	For $i=6,7$, we have 7 starts
+	
+	Otherwise,\\
+	If i = 1, then print n starts\\
+	If i = 2, then print 2n starts\\
+	If i = 3, then print 3n-1 starts\\
+	If i = 4, then print 4n-1 starts\\
+	If i = 5, then print 5n-2 starts\\
+	
+	Generally, the expected number of starts should be $\frac{2}{7} * 7 + \frac{1}{7} * n + \frac{1}{7} * 2n + \frac{1}{7} * (3n-1) +\frac{1}{7} * (4n - 1) + \frac{1}{7} * (5n-2)= \frac{15n + 9}{7}$ starts
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

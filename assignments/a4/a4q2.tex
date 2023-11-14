@@ -1,0 +1,95 @@
+\documentclass[12pt]{article}
+\usepackage{algpseudocode} 
+\usepackage{fullpage,url,amssymb,epsfig,color,xspace,tikz,amsmath}
+\usetikzlibrary{shapes,positioning,calc,chains}
+\usepackage[pdftitle={CS 240 Assignment 4},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+% \snode{ID}{NUMBER} becomes \node{ID}[item]{\ensuremath{NUMBER}}
+\newcommand{\snode}[2]{\node(#1)[item]{\ensuremath{#2}}}
+
+% \nodelabel{SUBSCRIPT} becomes \node[label]{\ensuremath{S_SUBSCRIPT}}
+\newcommand{\nodelabel}[1]{\node[label]{\ensuremath{S_#1}}}
+
+\newcommand{\quesbox}[2]{\begin{center} \framebox[.5\textwidth]{%
+			\raisebox{-5mm}[0mm][#1]{\begin{minipage}[t]{.45\textwidth}%
+					{\normalsize\sf #2}{\phantom{ans}}\end{minipage}}} \end{center}}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+\definecolor{typo}{rgb}{0.75,0,0}
+\definecolor{care}{rgb}{0,0,0}
+\begin{document}
+	
+	\begin{center}
+		
+		{\Large\bf Assignment 4 Problem 2}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Problem 2
+	
+	\begin{enumerate}
+		\part{a} Assume that we have a hash table of size 6 and that our keys are selected uniformly at random from the set $A = f\{1, 2, 3, \ldots, 600\}$. Consider the following two hash functions:
+		\begin{center}
+			$$\begin{aligned}
+				& h_0(k) = k \mod 6 \\
+				& h_1(k) = 2k \mod 6 
+			\end{aligned}$$
+		\end{center}
+		
+		Is one hash function preferred over the other? Justify your answer.
+		
+		\part{b} Given an array $A$ of size $n$ storing integers and a number $m$, give an algorithm to determine whether array $A$ contains a subarray whose elements sum to $m$.  
+		For example, the array $A = [5, 7, 9, 11, 13, 15]$ has a subarray, at consecutive indices 1 and 2, where elements sum to $m=16$.
+		Your algorithm must have an expected runtime of $O(n)$.
+		
+	\end{enumerate}
+	
+	
+	solution:
+	\begin{enumerate}
+		\part{a} It seems that $h_0(k)$ is better than $h_1(k)$, because for "$h_1(k) = 2k \quad \mod 6$", the index of even number (i.e. 1 3 5) will never be used. But for $h_0(k)$ , each hash value (i.e. 0,1,2,3,4,5) is equally likely.
+		
+		\part{b} The algorithm states as follows:
+		We construct two pointer to point the begin of the subarray ($i$), and the end of the subarray ($j$), and an variable to be the sum of all element in the current subarray ($arr\_sum$). All these are initialed to be 0.\\
+		Then we start change $j$ along the array, each time we increase $j$ by 1, and see whether $arr\_sum + A[j]$ is greater than m, if yes, which means that the current subarray exceed what we want, then we delete the first term in the subarray by increase the $i$ by 1 and changes the $arr\_sum$ (more details will state later), if it is exactly m, then we find the required subarray, otherwise, we continue increasing $j$.\\
+		When deleting the first few elements in the subarray, we may need to delete more than one element, so when we decide to remove the elements away from subarray, we firstly delete one, then we check  the current sum with m, if it is exactly m, then we find the required subarray, if it is less than m, then we stop remove elements, and do the previous step (increase the end of the subarray $j$ and check), if it is still greater than m, then we continue remove elements from subarray.\\
+		When $j$ reach the end of the array A, and sum of current subarray is still less than m. Then we return that we did not find a subarray with sum m.\\
+		The pseudo-code:\\
+		Subarray\_exist(A, m)\\
+		A: array of size n\\
+		m: the number that we want the subarray sum to\\
+		\hphantom{1111}$i\gets 0$ $j\gets 0$ $arr\_sum\gets 0$\\
+		\hphantom{1111}while true		// keep iterating\\
+		\hphantom{11111111}if($j == n$)	return not found!\\
+		\hphantom{11111111}if($arr\_sum == m$) return found!\\
+		\hphantom{11111111}if($arr\_sum < m$)\\
+		\hphantom{111111111111}$j\gets j+1$\\
+		\hphantom{111111111111}$arr\_sum\gets arr\_sum + A[j]$\\
+		\hphantom{11111111}else\\
+		\hphantom{111111111111}$arr\_sum\gets arr\_sum - A[i]$\\
+		\hphantom{111111111111}$i\gets i+1$\\
+		This ensures the runtime in O(n), because each iteration we return or add 1 to $i$ or $j$. And i will never get greater than j, the program will terminate when j is equal to n. Therefore, the maximum number of iterations is $\Theta(n)$. Therefore, the algorithm is in O(n).
+		
+	\end{enumerate}
+	
+\end{document}

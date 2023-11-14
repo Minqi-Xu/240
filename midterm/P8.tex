@@ -1,0 +1,51 @@
+\documentclass[12pt]{article}
+
+%\usepackage{algo}
+\usepackage{tikz,fullpage,url,amssymb,amsmath,epsfig,color,xspace,alltt,mathtools}
+\usetikzlibrary{shapes,chains,positioning}
+\usepackage[pdftitle={CS 240 Assignment 2},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+%\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf Problem 8}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	We can modify the AVL tree to achieve the goal.
+	
+	We can construct a AVL tree normally, and bound a variable called `last\_insert' with it. The `last\_insert' stores the key of the most recently inserted pair. We need to make sure this variable valid and up-to-date by modifying it during the normal inserting process (i.e. change it into the new key when insert a new pair).
+	
+	For the function deleteLast(), actually, we just need to call function delete() with the parameter `last\_insert'.
+	
+	Since the normall AVL tree has the running time of search, insert, and delete all in $\Theta(\log n)$, we did not change the funciton of search and delete, so the running time of our own search and delete will not change. For insert(), what we do is just add a constant time consuming statement into the function, which keeps the insert() still in $\Theta(\log n)$. For deleteLast(), what we do is just call another function with the running time $\Theta(\log n)$, which implies that the running time for deleteLast() is also $\Theta(\log n)$.
+	
+	And the additional space we used compared to the AVL tree is $\Theta(1)$, which satisfied with the requirement in the question.
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

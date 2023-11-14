@@ -1,0 +1,62 @@
+\documentclass[12pt]{article}
+\usepackage{algpseudocode} 
+\usepackage{fullpage,url,amssymb,epsfig,color,xspace,tikz,amsmath}
+\usetikzlibrary{shapes,positioning,calc,chains}
+\usepackage[pdftitle={CS 240 Assignment 5},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+% \snode{ID}{NUMBER} becomes \node{ID}[item]{\ensuremath{NUMBER}}
+\newcommand{\snode}[2]{\node(#1)[item]{\ensuremath{#2}}}
+
+% \nodelabel{SUBSCRIPT} becomes \node[label]{\ensuremath{S_SUBSCRIPT}}
+\newcommand{\nodelabel}[1]{\node[label]{\ensuremath{S_#1}}}
+
+\newcommand{\quesbox}[2]{\begin{center} \framebox[.5\textwidth]{%
+			\raisebox{-5mm}[0mm][#1]{\begin{minipage}[t]{.45\textwidth}%
+					{\normalsize\sf #2}{\phantom{ans}}\end{minipage}}} \end{center}}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+\definecolor{typo}{rgb}{0.75,0,0}
+\definecolor{care}{rgb}{0,0,0}
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf Assignment 5 Problem 4}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	\begin{enumerate}
+		\part{a} Construct the last occurrence function $L$ for pattern $P=adobodoa$  where $\Sigma = {a,b,c,d,o,t}$.
+		
+		\part{b} Trace the search for $P$ in $T=dotadotadotdotadobodoadot$ using the Boyer-Moore algorithm.
+		Indicate in a table such as Table \ref{bmtable} which characters of $P$ were compared with which characters of $T$.
+		Follow the example from the lecture video in Module 9.
+		Place each character of $P$ in the column of the compared-to character of $T$. 
+		Put brackets around the character if they are known to match from the previous step (similar to the examples in the slides). 
+		Use a new row when sliding the pattern. You may not need all rows in the table.  Add more rows to the table if you need more.
+		
+		
+		\part{c} For any $m\geq 1$ and any $n\geq m$, give a pattern $P$ and a text $T$ such that the Boyer-Moore algorithm looks at exactly $\Theta(n/m)$ characters.  
+		Justify your answer.
+		
+	\end{enumerate}
+	
+	
+\end{document}

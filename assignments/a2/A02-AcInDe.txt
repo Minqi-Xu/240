@@ -1,0 +1,32 @@
+Academic Integrity Declaration (AcInDe) for 
+
+CS 240 Fall 2021 Assignment 02 (A02 or A2)) 
+
+DUE: Sign as indicated below before you start working on the assessment and 
+submit to MarkUs after signing. At the latest, submit with the assignment. 
+It must be submitted as a text file. 
+If not "signed" (Quest username - maximum 8 characters) on the line indicated 
+below and submitted to MarkUs, the assessment grade will be zero.
+
+INSTRUCTIONS: Carefully read the following and then fill in your Quest 
+username in the place provided below to indicate that you have read and agree 
+to the declaration. We will take the submission to MarkUs of this document, 
+with your Quest username filled in, to be equivalent of signing this document. 
+Keep a copy for your own records.
+
+I declare the following statements to be true, effective from the release of 
+the aforementioned assessment until its due date and time: 
+
+* The work I submit here is entirely my own. 
+* I will not use/have not used any unauthorized aids to complete this assessment. 
+Unauthorized aids include but are not limited to
+     - the Internet
+     - someone else's solutions or partial solutions
+NOTE:  if you are unsure if something is unauthorized, check with course staff 
+before using it. 
+* Because this is an assignment, I may discuss it with others but will not write, type, take pictures, or by any other means capture what occurred during the meeting and will/did wait at least 30 minutes before recording anything from that meeting. 
+* I have not and will not share in whole or in part email/files/documents related to the solutions of the assessment except possibly with course staff. 
+* I am aware that misconduct related to assessments can result in significant penalties, including, zero on the assessment, overall grade deduction and, depending on the significance of the assessment, failing the course and suspension (this is covered in Policy 71: 
+https://uwaterloo.ca/secretariat/policies-procedures-guidelines/policy-71). 
+
+--> Student Quest username:  m259xu

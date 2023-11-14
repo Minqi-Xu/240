@@ -1,0 +1,252 @@
+\documentclass[12pt]{article}
+\usepackage{algpseudocode} 
+\usepackage{fullpage,url,amssymb,epsfig,color,xspace,tikz,amsmath}
+\usetikzlibrary{shapes,positioning,calc,chains}
+\usepackage[pdftitle={CS 240 Assignment 5},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+% \snode{ID}{NUMBER} becomes \node{ID}[item]{\ensuremath{NUMBER}}
+\newcommand{\snode}[2]{\node(#1)[item]{\ensuremath{#2}}}
+
+% \nodelabel{SUBSCRIPT} becomes \node[label]{\ensuremath{S_SUBSCRIPT}}
+\newcommand{\nodelabel}[1]{\node[label]{\ensuremath{S_#1}}}
+
+\newcommand{\quesbox}[2]{\begin{center} \framebox[.5\textwidth]{%
+			\raisebox{-5mm}[0mm][#1]{\begin{minipage}[t]{.45\textwidth}%
+					{\normalsize\sf #2}{\phantom{ans}}\end{minipage}}} \end{center}}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+\definecolor{typo}{rgb}{0.75,0,0}
+\definecolor{care}{rgb}{0,0,0}
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf University of Waterloo}\\
+		\vspace{3mm}
+		{\Large\bf CS240 Fall 2021}\\
+		\vspace{2mm}
+		{\Large\bf Assignment 5}\\
+		\vspace{3mm}
+		\textbf{Due Date: Wednesday, Dec 1 at 5:00pm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	The integrity of the grade you receive in this course is very important to you and the University of Waterloo.  
+	As part of every assessment in this course you must read and sign an Academic Integrity Declaration before you start working on the assessment and submit it \textbf{before the deadline of December 1st} along with your answers to the assignment; i.e. \textbf{read, sign and submit A05-AcInDe.txt now or as soon as possible}.
+	The agreement will indicate what you must do to ensure the integrity of your grade.
+	If you are having difficulties with the assignment, course staff are there to help (provided it isn't last minute). \\
+	~\\
+	\textbf{The Academic Integrity Declaration must be signed and submitted on time or the assessment will not be marked.} \\
+	~\\
+	Please read \url{http://www.student.cs.uwaterloo.ca/~cs240/f21/guidelines.pdf} for guidelines on submission.  
+	\textbf{Each question must be submitted individually to MarkUs as a PDF} with the corresponding file names: 
+	a5q1.pdf, a5q2.pdf, ... , a5q5.pdf . \\
+	~\\
+	It is a good idea to submit questions as you go so you aren't trying to create several PDF files at the last minute. \\
+	~\\
+	\textbf{Late Policy:} Assignments are due at 5:00pm.
+	To accommodate any small time differences with our submission server, there is a grace period of 5 minutes; i.e. we will accept assignments until 5:05pm without penalty.  
+	Assignments submitted after 5:05pm will incur a penalty of 1 mark per minute to a maximum of 10 marks.   \\
+	\textbf{Assignments submitted after 5:15pm will not be accepted} but may be reviewed (by request) for feedback purposes only. \\  
+	~\\
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Problem 1
+	\subsection{Range Trees [3+1+3+3=10 marks]}
+	
+	\begin{itemize}
+		\part{a} Draw a 2-dimensional range tree of minimal height for the following set of points:
+		\begin{center}
+			$\{(7, 88), (12, 19), (22, 33), (27, 29), (28, 9), (31, 99), (42, 66)\}$ 
+		\end{center}
+		
+		\part{b} Suppose a two dimensional range tree data structure stores $n$ points, and that the BST ordered by $x$-coordinates is perfect, i.e., every level is completely filled.
+		Give an exact closed form formula in terms of $n$ for the sum of the number of nodes in the $x$-ordered BST plus the total number of nodes in all $y$-ordered BSTs.
+		
+		\part{c} Assume that we have a set of $n$ numbers (not necessarily integers) and we are interested only in counting the number of points that lie in a range rather than in reporting all of them.
+		Describe how a 1-dimensional range tree (i.e., a balanced BST) can be modified such that a range counting query can be performed in $O(\log n)$ time (independent of $s$).  
+		Briefly justify that your algorithm is within the expected runtime.
+		
+		\part{d} Next, consider the 2-dimensional case where we have a set of $n$ 2-dimensional points.
+		Given a query rectangle $R$, we only want to find the number of points inside $R$, not the points themselves.
+		Explain how to modify the Range Tree data structure and the search algorithm such that counting queries can be performed in $O((\log n)^2))$ time.  
+		Briefly justify that your algorithm meets the runtime requirement.
+		
+	\end{itemize}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Problem 2
+	\subsection{Rabin-Karp [2+5+3=10 marks]}
+	
+	A deranged instructor once posed the following question on a final exam: \\
+	\textbf{Note: this is not the problem you are asked to solve.} \\
+	~\\
+	Given a text $T$ of length $n$ and an array $P$ of size $\ell$ of patterns where each $P[i]$, for $0 \leq i < \ell$, is a pattern, i.e. an array of characters, where:
+	\begin{itemize}
+		\item the length of $P[0]$ is $m$
+		\item the length of $P[k]$ is $(k+1)m$ for $k \geq 0$ 
+		\item $P[k-1]$ is a prefix of $P[k]$ for all $k > 0$
+		\item $n$ is larger than the length of the longest pattern $P[\ell-1]$
+	\end{itemize}
+	
+	State how to modify the Rabin-Karp algorithm so that it returns $(i,k)$ where $k$ is maximal such that $P[k]$ is found in $T$; i.e. $P[k+1]$ is not found in $T$. 
+	The returned $i$ is the position in the text where pattern $P[k]$ is found.
+	For simplicity, you may assume that $\Sigma = \{0, 1, 2, \ldots, 9\}$ and the hash function is the standard one described on Slide 16 of Module 9. \\
+	~\\
+	\textbf{One possible solution is to do the following:} \\
+	~\\
+	In the pre-processing step, create an array $V$ of hash values for each pattern (of increasing length) where $V[i]$ is the hash value for $P[i]$. \\
+	~\\
+	The algorithm then uses a binary search approach on the pattern hash value array to find the longest pattern found in the text.  
+	For the initial step, let $b =$ the midpoint of $(0, \ell)$, then the Rabin-Karp algorithm is applied using hash value $V[b]$ and its corresponding pattern. \\
+	If the pattern is found in the text, then a new pattern of $V$ is chosen at the midpoint of $(b+1, \ell)$;
+	otherwise the pattern of $V$ at the midpoint of $(0, b-1)$ is chosen.  
+	The Rabin-Karp algorithm is then applied again with this new pattern.
+	The algorithm continues in this way until the maximal length pattern found in $T$ is determined.
+	You may assume the appropriate values are returned (these details are not important for this question). \\
+	~\\
+	\textbf{The questions for you to answer are below.}
+	
+	\begin{enumerate}
+		\part{a} Give an algorithm to efficiently create array $V$ and briefly justify the runtime.
+		
+		For parts b) and c) below, do not include the pre-processing time from part a).
+		
+		\part{b} Analyze the algorithm given and give the following runtimes:
+		\begin{itemize}
+			\item Best-case runtime
+			\item Worst-case runtime
+			\item Best-case expected runtime
+			\item Worst-case expected runtime
+		\end{itemize}
+		Explain how the runtimes were determined. \\
+		Note: The runtime function parameters are: $n$, $m$ and $\ell$.
+		
+		\part{c} Suppose the solution is modified so that if a pattern corresponding to $V[j]$ is found, Rabin-Karp is then executed using $V[j+1]$ and its corresponding pattern.  
+		If this pattern is not found, we can conclude that the pattern for $V[j]$ is maximal and terminate.  
+		Otherwise, the algorithm continues as originally stated. \\
+		Does this change either of the runtimes from part b)?  Briefly justify your answer and give the new runtime(s) if they differ from the previous part. \\
+		
+	\end{enumerate}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Problem 3
+	\subsection{KMP [3+3=6 marks]} 
+	
+	\begin{enumerate}
+		\part{a} Compute the failure array for the pattern $P=$\texttt{ababac}.
+		
+		\part{b}
+		Show how to search for pattern $P=$\texttt{ababac} in the text $T=$\texttt{abcaabaabababacabcaa} using the KMP algorithm.
+		Indicate in a table such as Table \ref{kmp} which characters of $P$ were compared with which characters of $T$. 
+		Follow the example on slide~27 in module~8.
+		Place each character of $P$ in the column of the compared-to character of $T$.  
+		Put brackets around the character if an actual comparison was not performed. 
+		You may not need all space in the table.
+		
+	\end{enumerate}
+	\begin{table}
+		\Large{
+			\begin{center}
+				\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+					\hline
+					a&b&c&a&a&b&a&a&b&a&b&a&b&a&c&a&b&c&a&a\\
+					\hline
+					\hline
+					&&&&&&&&&&&&&&&&&&&\\
+					\hline
+					&&&&&&&&&&&&&&&&&&&\\
+					\hline
+					&&&&&&&&&&&&&&&&&&&\\
+					\hline
+					&&&&&&&&&&&&&&&&&&&\\
+					\hline
+					&&&&&&&&&&&&&&&&&&&\\
+					\hline
+					&&&&&&&&&&&&&&&&&&&\\
+					\hline
+					&&&&&&&&&&&&&&&&&&&\\
+					\hline
+					&&&&&&&&&&&&&&&&&&&\\
+					\hline
+					&&&&&&&&&&&&&&&&&&&\\
+					\hline
+					&&&&&&&&&&&&&&&&&&&\\
+					\hline
+				\end{tabular}
+		\end{center}}
+		\caption{Table for KMP problem.}\label{kmp}
+	\end{table}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Problem 4
+	
+	\subsection{Boyer-Moore [2+3+3=8 marks]}
+	\begin{enumerate}
+		\part{a} Construct the last occurrence function $L$ for pattern $P=adobodoa$  where $\Sigma = {a,b,c,d,o,t}$.
+		
+		\part{b} Trace the search for $P$ in $T=dotadotadotdotadobodoadot$ using the Boyer-Moore algorithm.
+		Indicate in a table such as Table \ref{bmtable} which characters of $P$ were compared with which characters of $T$.
+		Follow the example from the lecture video in Module 9.
+		Place each character of $P$ in the column of the compared-to character of $T$. 
+		Put brackets around the character if they are known to match from the previous step (similar to the examples in the slides). 
+		Use a new row when sliding the pattern. You may not need all rows in the table.  Add more rows to the table if you need more.
+		\begin{table}[ht]
+			\Large{
+				\begin{center}
+					\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+						\hline
+						d&o&t&a&d&o&t&a&d&o&t&d&o&t&a&d&o&b&o&d&o&a&d&o&t\\
+						\hline
+						\hline
+						&&&&&&&&&&&&&&&&&&&&&&&&\\
+						\hline
+						&&&&&&&&&&&&&&&&&&&&&&&&\\
+						\hline
+						&&&&&&&&&&&&&&&&&&&&&&&&\\
+						\hline
+						&&&&&&&&&&&&&&&&&&&&&&&&\\
+						\hline
+						&&&&&&&&&&&&&&&&&&&&&&&&\\
+						\hline
+						&&&&&&&&&&&&&&&&&&&&&&&&\\
+						\hline
+						&&&&&&&&&&&&&&&&&&&&&&&&\\
+						\hline
+						&&&&&&&&&&&&&&&&&&&&&&&&\\
+						\hline
+						&&&&&&&&&&&&&&&&&&&&&&&&\\
+						\hline
+					\end{tabular}
+			\end{center}}
+			\caption{Table for Boyer-Moore problem.}\label{bmtable}
+		\end{table}
+		
+		\part{c} For any $m\geq 1$ and any $n\geq m$, give a pattern $P$ and a text $T$ such that the Boyer-Moore algorithm looks at exactly $\Theta(n/m)$ characters.  
+		Justify your answer.
+		
+	\end{enumerate}
+	
+	\subsection{Suffix Trees and Arrays [3+3=6 marks]}
+	\begin{enumerate}
+		\part{a} Draw the suffix tree corresponding to the text $T =abracadabra$.
+		\part{b} Construct suffix array for $S = balbes$.
+	\end{enumerate}
+	%%% END OF QUESTIONS %%%
+\end{document}

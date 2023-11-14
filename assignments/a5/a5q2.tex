@@ -1,0 +1,120 @@
+\documentclass[12pt]{article}
+\usepackage{algpseudocode} 
+\usepackage{fullpage,url,amssymb,epsfig,color,xspace,tikz,amsmath}
+\usetikzlibrary{shapes,positioning,calc,chains}
+\usepackage[pdftitle={CS 240 Assignment 5},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+% \snode{ID}{NUMBER} becomes \node{ID}[item]{\ensuremath{NUMBER}}
+\newcommand{\snode}[2]{\node(#1)[item]{\ensuremath{#2}}}
+
+% \nodelabel{SUBSCRIPT} becomes \node[label]{\ensuremath{S_SUBSCRIPT}}
+\newcommand{\nodelabel}[1]{\node[label]{\ensuremath{S_#1}}}
+
+\newcommand{\quesbox}[2]{\begin{center} \framebox[.5\textwidth]{%
+			\raisebox{-5mm}[0mm][#1]{\begin{minipage}[t]{.45\textwidth}%
+					{\normalsize\sf #2}{\phantom{ans}}\end{minipage}}} \end{center}}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+\definecolor{typo}{rgb}{0.75,0,0}
+\definecolor{care}{rgb}{0,0,0}
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf Assignment 5 Problem 2}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Problem 2
+	
+	
+	A deranged instructor once posed the following question on a final exam: \\
+	\textbf{Note: this is not the problem you are asked to solve.} \\
+	~\\
+	Given a text $T$ of length $n$ and an array $P$ of size $\ell$ of patterns where each $P[i]$, for $0 \leq i < \ell$, is a pattern, i.e. an array of characters, where:
+	\begin{itemize}
+		\item the length of $P[0]$ is $m$
+		\item the length of $P[k]$ is $(k+1)m$ for $k \geq 0$ 
+		\item $P[k-1]$ is a prefix of $P[k]$ for all $k > 0$
+		\item $n$ is larger than the length of the longest pattern $P[\ell-1]$
+	\end{itemize}
+	
+	State how to modify the Rabin-Karp algorithm so that it returns $(i,k)$ where $k$ is maximal such that $P[k]$ is found in $T$; i.e. $P[k+1]$ is not found in $T$. 
+	The returned $i$ is the position in the text where pattern $P[k]$ is found.
+	For simplicity, you may assume that $\Sigma = \{0, 1, 2, \ldots, 9\}$ and the hash function is the standard one described on Slide 16 of Module 9. \\
+	~\\
+	\textbf{One possible solution is to do the following:} \\
+	~\\
+	In the pre-processing step, create an array $V$ of hash values for each pattern (of increasing length) where $V[i]$ is the hash value for $P[i]$. \\
+	~\\
+	The algorithm then uses a binary search approach on the pattern hash value array to find the longest pattern found in the text.  
+	For the initial step, let $b =$ the midpoint of $(0, \ell)$, then the Rabin-Karp algorithm is applied using hash value $V[b]$ and its corresponding pattern. \\
+	If the pattern is found in the text, then a new pattern of $V$ is chosen at the midpoint of $(b+1, \ell)$;
+	otherwise the pattern of $V$ at the midpoint of $(0, b-1)$ is chosen.  
+	The Rabin-Karp algorithm is then applied again with this new pattern.
+	The algorithm continues in this way until the maximal length pattern found in $T$ is determined.
+	You may assume the appropriate values are returned (these details are not important for this question). \\
+	~\\
+	\textbf{The questions for you to answer are below.}
+	
+	\begin{enumerate}
+		\part{a} Give an algorithm to efficiently create array $V$ and briefly justify the runtime.
+		
+		For parts b) and c) below, do not include the pre-processing time from part a).
+		
+		\part{b} Analyze the algorithm given and give the following runtimes:
+		\begin{itemize}
+			\item Best-case runtime
+			\item Worst-case runtime
+			\item Best-case expected runtime
+			\item Worst-case expected runtime
+		\end{itemize}
+		Explain how the runtimes were determined. \\
+		Note: The runtime function parameters are: $n$, $m$ and $\ell$.
+		
+		\part{c} Suppose the solution is modified so that if a pattern corresponding to $V[j]$ is found, Rabin-Karp is then executed using $V[j+1]$ and its corresponding pattern.  
+		If this pattern is not found, we can conclude that the pattern for $V[j]$ is maximal and terminate.  
+		Otherwise, the algorithm continues as originally stated. \\
+		Does this change either of the runtimes from part b)?  Briefly justify your answer and give the new runtime(s) if they differ from the previous part. \\
+		
+	\end{enumerate}
+	
+	
+	%%% END OF QUESTIONS %%%
+	
+	solution:
+	
+	\begin{enumerate}
+		\part{a} Assume the value represented in P[i] is $n_i$. Then for V[0], we get it by $n_0 \mod p$ where p is a suitable prime number. Then we can get V[i+1] from V[i]. For V[i+1], we let temp = V[i], then we do $temp = temp \times 10 \mod p$ m times. Then, do \\
+		temp = (temp + the number that represented by the last m digits of V[i+1]) $\mod p$\\
+		For the running time, each time we get V[i+1] from V[i], we need to do O(m) operations (including "adding 0" to the end of temp, and translate the last m digits of V[i+1] into value). Also, for the V[0], we need O(m) operations to translate the characters into the value it represented. Therefore, the total running time should be O($ml$)
+		
+		\part{b} Since we will stop the algorithm when we reach the maximal length pattern found, therefore, no matter the cases, we need to do $O(\log l)$ steps of "binary search"\\
+		For Best-case runtime, we assume that no hash collision occur, and we find the pattern at the first position of the text. In this case, since no hash collision occur, we can skip the character-by-character comparision. Therefore, the algorithm's best-case running time for each pattern is $O(1)$, therefore, the best-case running time for this alfothim is $O(\log l)$.\\
+		For Worst-case runtime, we assume that hash collision occurs each time, and we need to compare the entire text T each time. To go through the entire text, we need O(n) shifts. For each shifts, we need compare character-by-character due to the collision, which costs $O(ml)$ times. Therefore, totally, the worst-case running time for this algorithm is $O(nml\log l)$\\
+		For Best-case expected runtime, we assume that in the most cases, hashes do not collide, and we find the pattern at the first position of the text. In this case, since hash collision occurs hardly ever (O(1)), and each time we reach the pattern in O(1). Therefore, the best-case expected runtime should be $O(ml + \log l )$\\
+		For Worst-case expected runtime, we assume that in the most cases, hashes do not collide, and we need to go through the entire text T each time. In this case, Since we need to go through the entire text, O(n) number of shifts is required. And for these O(n) shifts, there are only O(1) hash collision occurs, each of collision needs $O(ml)$ times to compare character-by-character. Therefore, the worst-case expected running time should be $O((n+ml)\log l)$
+		
+		\part{c} Since we are just doing another additional step in the "binary search" process, but overall, the running time of binary search in the worst-case are still $O(\log l)$, but in the best-case, the running time to find the maximal length pattern is just $O(1)$, therefore, the best-case runtime is now $O(1)$, and the best-case expected runtime is now $O(1)$ since in almost cases, the hash collision won't occur in O(1) number of comparision.
+	\end{enumerate}
+\end{document}

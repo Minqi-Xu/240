@@ -1,0 +1,88 @@
+\documentclass[12pt]{article}
+\usepackage{algpseudocode} 
+\usepackage{fullpage,url,amssymb,epsfig,color,xspace,tikz,amsmath}
+\usetikzlibrary{shapes,positioning,calc,chains}
+\usepackage[pdftitle={CS 240 Assignment 4},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+% \snode{ID}{NUMBER} becomes \node{ID}[item]{\ensuremath{NUMBER}}
+\newcommand{\snode}[2]{\node(#1)[item]{\ensuremath{#2}}}
+
+% \nodelabel{SUBSCRIPT} becomes \node[label]{\ensuremath{S_SUBSCRIPT}}
+\newcommand{\nodelabel}[1]{\node[label]{\ensuremath{S_#1}}}
+
+\newcommand{\quesbox}[2]{\begin{center} \framebox[.5\textwidth]{%
+			\raisebox{-5mm}[0mm][#1]{\begin{minipage}[t]{.45\textwidth}%
+					{\normalsize\sf #2}{\phantom{ans}}\end{minipage}}} \end{center}}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+\definecolor{typo}{rgb}{0.75,0,0}
+\definecolor{care}{rgb}{0,0,0}
+\begin{document}
+	
+	\begin{center}
+		
+		{\Large\bf Assignment 4 Problem 1}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Problem 1
+	
+	Suppose you want to sort a set of $n$ strings over an alphabet of size $d$. 
+	Furthermore, suppose that the maximum-length string in your set is of length $\ell_{\text{max}}$, 
+	and that the average length of the strings in your set is $\ell_{\text{avg}}$. 
+	We assume that our sorted set will follow the standard alphabetical ordering; 
+	for example, \texttt{a} $<$ \texttt{ab} $<$ \texttt{b}.
+	
+	\begin{enumerate}
+		\part{a} One method we saw in class for accomplishing this task is \textit{radix sort}. 
+		First, we pad all strings of length less than $\ell_{\text{max}}$ with a suffix of end-of-word characters so that
+		all strings have length $\ell_{\text{max}}$, then we run radix-sort on our set of strings as usual. 
+		Using the parameters defined above, describe the runtime and the amount of space used by this approach.
+		
+		\part{b} Another method to accomplish this task makes use of uncompressed \textit{multiway tries}. 
+		First, we build a multiway trie containing every string in our set. 
+		Each node contains an array of children pointers of size $d+1$. 
+		Then, we perform a preorder traversal and read each string, giving us a sorted ordering. 
+		Using the parameters defined above, describe the runtime and the amount of space used by this approach.
+		A big-O bound is acceptable.
+		
+		\textsl{Hint.} Assume the trie has $k$ nodes, and try to express the runtime and space using $k$ along with the other parameters.  Then try to bound $k$ in terms of the other parameters.
+		
+		\part{c} For which situations would the radix sort approach be preferable? For which situations would the multiway trie approach be preferable?
+		
+	\end{enumerate}
+	
+	
+	solution:
+	\begin{enumerate}
+		\part{a} For the radix sorts we learned in the lecture, we know that the LSD-Radix-Sort seems more efficient than the MSD-Radix-Sort, so we choose to use the method of LSD-Radix-Sort. From lecture, we know that time cost is $\Theta(m(n+R))$, and auxiliary space is $\Theta(n+R)$ where n is the size of array, which contains  m-digit radix-R numbers. So similarly, extend this method to the string, we can define that the end-of-word character has the hightest priority (i.e. end-of-word is less than any other characters in the string)\\ Therefore, we have $n=n \quad m=l_{max} \quad R=d$\\
+		The runtime should be $\Theta(l_{max}(n+d))$ and the amount of space should be $\Theta(n+d)$
+		
+		\part{b} Assume the trie has k nodes. And the worst case is that all strings has an unique path (have no common nodes except the root) in the trie, and this gives us the upper bound of k: $ k \in O(l_{avg} \cdot n)$\\
+		For the trie of k nodes, since we are tranversing the trie, and each node including leaves are visit exactly once. Therefore, the runtime for this method should be $\Theta(k) = P(l_{avg} \cdot n)$.\\
+		For the space analysis, since each node contains an array of children pointer of size $d+1$, therefore, each node has are considered to have size $\Theta(d+1) = \Theta(d)$, therefore, for the whole trie with k nodes, the total space needed is $\Theta(k(d)) = O(l_{avg}\cdot d \cdot  (n+d))$ 
+		
+		\part{c} Consider the runtime and space of two approach, it is not hard to find that when the difference between $l_{max}$ and $l_{avg}$ is large, then the multiway trie performs better in the runtime. Consider the space consumes, if d is too large or $l_{avg}$ is too large, then the radix sort may be a better choice. Generally, in we need better runtime, then we choose trie, if we need few space, then we choose radix sort.
+	\end{enumerate}
+	
+\end{document}

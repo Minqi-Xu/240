@@ -1,0 +1,61 @@
+\documentclass[12pt]{article}
+
+%\usepackage{algo}
+\usepackage{tikz,fullpage,url,amssymb,amsmath,epsfig,color,xspace,alltt,mathtools}
+\usetikzlibrary{shapes,chains,positioning}
+\usepackage[pdftitle={CS 240 Assignment 2},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+%\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf Problem 1}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	a)
+	
+	best-case: $\Theta(1)$
+	
+	worst-case: $\Theta(n)$\\
+	
+	b)
+	\begin{itemize}
+		\item For the structural property of the heap, the filled items in the last level are left-justified, and all other levels of the heap are competely filled. This helps us to construct the heap using an array by successively put each level of the heap into the array with out any empty items.
+		\item For AVL tree, the situation changes, although the tree is height-balanced, but levels may not be competely filled. If we construct the AVL tree using an array, then this may leads a lot of empty items in the array. And this is bad for us to maitain the data structure. So for AVL tree, the linked node structure performs better.
+	\end{itemize}
+
+	c)
+	
+	The array from the first call of bucket-sort should be
+	
+	$array\quad = \quad [0038,0496,2358,2335,3786,4586]$
+	
+	The total number of calls to bucket-sort is 2, and the depth of recursion is 2
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

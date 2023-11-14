@@ -1,0 +1,84 @@
+\documentclass[12pt]{article}
+%\usepackage{algpseudocode} 
+%\usepackage{algo}
+\usepackage{fullpage,url,amssymb,epsfig,color,xspace,tikz,amsmath}
+\usetikzlibrary{shapes,positioning,calc,chains}
+\usepackage[pdftitle={CS 240 Assignment 3},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+% \snode{ID}{NUMBER} becomes \node{ID}[item]{\ensuremath{NUMBER}}
+\newcommand{\snode}[2]{\node(#1)[item]{\ensuremath{#2}}}
+
+% \nodelabel{SUBSCRIPT} becomes \node[label]{\ensuremath{S_SUBSCRIPT}}
+\newcommand{\nodelabel}[1]{\node[label]{\ensuremath{S_#1}}}
+
+\newcommand{\quesbox}[2]{\begin{center} \framebox[.5\textwidth]{%
+			\raisebox{-5mm}[0mm][#1]{\begin{minipage}[t]{.45\textwidth}%
+					{\normalsize\sf #2}{\phantom{ans}}\end{minipage}}} \end{center}}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+\definecolor{typo}{rgb}{0.75,0,0}
+\definecolor{care}{rgb}{0,0,0}
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf Assignment 3 Problem 3}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Problem 3
+	
+	Which of the following binary trees must have height $O(\log n)$?  Justify your answer.
+	
+	\begin{enumerate}
+		\part{a} There is a constant $c > 0$ such that for all nodes $z$ in $T$, $z.left.height \leq z.right.height + c$.
+		
+		This tree does not have height $O(\log n)$. Since there is no restriction on the height of the left subtree of a node, therefore, we can have a tree like all nodes are added on the right for each node. And for such tree, the height is $\Theta(n)$
+		
+		\part{b} Every node $z$ that is not a leaf in $T$ has exactly two children.
+		
+		This tree does not have height $O(\log n)$. We can also provide an example that the tree has the height $\Theta(n)$. Considering a tree that except the first level(which only contains a root), all levels has two nodes, one is a leaf, and another one is not. Therefore, let h be the height of the tree, and n be the number of nodes, we have the relation: $2*(h-1)+1=n$ rearrange and take logarithm on both sides, we have $h-1=\log(n-1)$ which implies that $h \in \Theta(\log n)$
+		
+		\part{c} Given a BST $T$, let $N(z)$ be the number of nodes in the subtree rooted at $z$.
+		If $z$ is an empty subtree, then $N(z) = 0$. \\
+		There is a constant $0 < c \leq 1$ such that for every node $z$ in $T$, $N(z.left) \geq c\times N(z.right) - 1$ and $N(z.right) \geq c\times N(z.left) - 1$.
+		
+		This tree has height $O(\log n)$.\\
+		We have the relation $N(left) \geq c\times N(right) - 1$ and $N(right) \geq c\times N(left) - 1$.\\
+		If we know the N(left), then we can get $c\times N(left)-1 \leq N(right) \leq \frac{N(left)+1}{c}$\\
+		Fix n, let h(n) be the max hight for n-node tree. We have the relation $h(n) = h(left) + 1$ if we assume that $N(left) \geq N(right)$\\
+		Also, we have that $N(left) + N(right) + 1 = n$ and $N(right) = c\times N(left) -1$\\
+		Simplifying, then we get $N(left)=\frac{n}{c+1}$ and $h(n) = h(\frac{n}{c+1})+1$\\
+		Note that $1<c+1\leq 2$\\
+		when n = 0, h(0) = -1 $\leq \log (n+1) = 0$\\
+		when n = 1, h(1) = 0 $\leq \log (n+1) = \log 2 = 1$\\
+		assume for $i < n$, we have $h(i) \leq \log (i+1)$\\
+		$h(n) = 1 + h(\frac{n}{c+1}) \leq \log(\frac{n}{c+1}) + 1 = \log(\frac{n}{c+1}) + \log 2 = \log(\frac{2n}{c+1}) \in O(\log n)$\\
+		By induction, we prove that for such BST with n nodes, the height is $O(\log n)$
+	\end{enumerate}
+	
+	
+	
+	
+	
+\end{document}

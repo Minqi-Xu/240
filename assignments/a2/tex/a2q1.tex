@@ -1,0 +1,84 @@
+\documentclass[12pt]{article}
+
+%\usepackage{algo}
+\usepackage{tikz,fullpage,url,amssymb,amsmath,epsfig,color,xspace,alltt,mathtools}
+\usetikzlibrary{shapes,chains,positioning}
+\usepackage[pdftitle={CS 240 Assignment 2},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+%\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf Assignment 2 Problem 1}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	A \emph{stable} sorting algorithm is one in which the relative order
+	of all identical elements (or keys) is the same in the output as it
+	was in the input. Prove, using a well-chosen example, that heapsort is
+	not a stable sorting algorithm.
+	\\
+	\\
+	solution:\\
+	Let $a=0,\quad b=1,\quad c=1,\quad d=2\quad e=3 \quad f=4 \quad and  \quad g=5$\\
+	Let the original array A to be $A[7]=\{g,f,e,d,c,b,a\}$\\
+	Suppose the heapsort is a stable soring, then the output should be $A[7]=\{a,c,b,d,e,f,g\}$\\
+	Assuming the HeapSort we used have the following peseudocode
+	\begin{align}
+		&HeapSort(A,n)\\
+		&n = A.size\\
+		&for \quad i = parent(last(n)) \quad down \quad to \quad 0 \quad do\\
+		&\quad fix-down(A,n,i)\\
+		&while \quad n > 1\\
+		&\quad swap \quad items\quad  at \quad A[root()] \quad and \quad A[last(n)]\\
+		&\quad decrease \quad n\\
+		&\quad fix-down(A,n,root())\\
+		\\
+		&fix-down(A,n,k)\\
+		&while \quad k \quad is \quad not \quad a \quad leaf \quad do\\
+		&\quad j=left-child(k)\\
+		&\quad if(j!=last(n)\quad and \quad A[j+1]>A[j])\\
+		&\qquad j=j+1\\
+		&\quad if(A[k]\geq A[j]) \quad break\\
+		&\quad swap(A[j],A[k])\\
+		&\quad k=j\\		
+	\end{align}
+	After doing the heapify part of the code (ie. line 2 to line 4 in the previous peseudocode), the entries in array A is now $\{g,f,e,d,c,b,a\}$ which does not change since it is already a maximum heap.\\
+	Then, we repeatedly find maximum(ie. line 5 to line 8)
+	after the 1st loop, we get $A[7] = \{f,d,e,a,c,b,g\}$\\
+	after the 2nd loop, we get $A[7] = \{e,d,b,a,c,f,g\}$\\
+	after the 3rd loop, we get $A[7] = \{d,c,b,a,e,f,g\}$\\
+	after the 4th loop, we get $A[7] = \{c,a,b,d,e,f,g\}$\\
+	after the 5th loop, we get $A[7] = \{b,a,c,d,e,f,g\}$\\
+	after the 6th loop, we get $A[7] = \{a,b,c,d,e,f,g\}$ which is also the final output\\
+	Notice that this is not identical to our expected output, therefore, we can conclude that the heapsort is not a stable sorting algorithm.
+	
+	QED.
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

@@ -1,0 +1,39 @@
+public.in:
+r 
+i 15 5 jays
+i 13 3 yankees
+i 12 7 orioles
+i 10 10 rays
+i 0 14 sox
+pw
+pl
+rw
+pw
+rl
+pl
+i 20 1 jays
+pw
+pl
+r
+i 70 1 dogs
+i 90 4 fruits
+i 100 2 cats
+i 60 5 bananas
+i 240 6 emotions
+i 80 7 apples
+i 239 3 goblins
+rw
+rw
+pw
+pl
+x
+
+public.out:
+jays
+yankees
+yankees
+orioles
+jays
+jays
+cats
+dogs

@@ -1,0 +1,127 @@
+\documentclass[12pt]{article}
+%\usepackage{algpseudocode} 
+%\usepackage{algo}
+\usepackage{fullpage,url,amssymb,epsfig,color,xspace,tikz,amsmath}
+\usetikzlibrary{shapes,positioning,calc,chains}
+\usepackage[pdftitle={CS 240 Assignment 3},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+% \snode{ID}{NUMBER} becomes \node{ID}[item]{\ensuremath{NUMBER}}
+\newcommand{\snode}[2]{\node(#1)[item]{\ensuremath{#2}}}
+
+% \nodelabel{SUBSCRIPT} becomes \node[label]{\ensuremath{S_SUBSCRIPT}}
+\newcommand{\nodelabel}[1]{\node[label]{\ensuremath{S_#1}}}
+
+\newcommand{\quesbox}[2]{\begin{center} \framebox[.5\textwidth]{%
+			\raisebox{-5mm}[0mm][#1]{\begin{minipage}[t]{.45\textwidth}%
+					{\normalsize\sf #2}{\phantom{ans}}\end{minipage}}} \end{center}}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+\definecolor{typo}{rgb}{0.75,0,0}
+\definecolor{care}{rgb}{0,0,0}
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf Assignment 3 Problem 5}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Problem 5
+	
+	Consider the list of keys:
+	\[
+	[1\ 2\ 3\ 4\ 5\ 6\ 7\ 8\ 9\ 10]
+	\]
+	and assume we perform the following searches:
+	\begin{center}
+		8, 6, 3, 7, 5$^\star$, 5, 2, 6, 2, 8$^\star$, 3, 9, 3, 8$^\star$ 
+	\end{center}
+	\begin{enumerate}
+		\part{a} Using the move-to-front heuristic, give the list ordering after the starred ($\star$) searches are performed. 
+		Additionally, record the number of comparisons between keys after each search, as well as, the total number of comparisons.\\
+		The ordering after the 5$^\star$:
+		\[
+		[5\ 7\ 3\ 6\ 8\ 1\ 2\ 4\ 9\ 10]
+		\]\\
+		The ordering after the first 8$^\star$:
+		\[
+		[8\ 2\ 6\ 5\ 7\ 3\ 1\ 4\ 9\ 10]
+		\]\\
+		The ordering after the second 8$^\star$:
+		\[
+		[8\ 3\ 9\ 2\ 6\ 5\ 7\ 1\ 4\ 10]
+		\]
+		\begin{center}
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c||c|} \hline
+				8 &  6 &  3 &  7 &  5 & 5 & 2 & 6 & 2 & 8 & 3 & 9 & 3 & 8  & Total \\ \hline
+				8 & 7 & 5 & 8 & 8 & 1 & 7 & 5 & 2 & 6 & 6 & 9 & 2 & 3 & 77\\ \hline
+			\end{tabular}
+		\end{center}
+		
+		\part{b} Repeat part (a), using the transpose heuristic instead of the move-to-front heuristic.
+		
+		The ordering after the 5$^\star$:
+		\[
+		[1\ 3\ 2\ 4\ 5\ 6\ 7\ 8\ 9\ 10]
+		\]\\
+		The ordering after the first 8$^\star$:
+		\[
+		[2\ 1\ 3\ 5\ 6\ 4\ 8\ 7\ 9\ 10]
+		\]\\
+		The ordering after the second 8$^\star$:
+		\[
+		[3\ 2\ 1\ 5\ 6\ 8\ 4\ 9\ 7\ 10]
+		\]
+		\begin{center}
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c||c|} \hline
+				8 &  6 &  3 &  7 &  5 & 5 & 2 & 6 & 2 & 8 & 3 & 9 & 3 & 8  & Total \\ \hline
+				8 & 6 & 3 & 8 & 6 & 5 & 3 & 6 & 2 & 8 & 3 & 9 & 2 & 7 & 76\\ \hline
+			\end{tabular}
+		\end{center}
+		
+		\part{c} Another heuristic is \textit{move-to-front2 (MTF2)} that is similar to
+		\textit{move-to-front (MTF)} except that when an element is found at position $i$ it is moved to position $\left \lfloor \frac{i}{2} \right \rfloor$.  
+		Repeat part (a), using this heuristic.  
+		
+		The ordering after the 5$^\star$:
+		\[
+		[1\ 3\ 2\ 5\ 7\ 6\ 8\ 4\ 9\ 10]
+		\]\\
+		The ordering after the first 8$^\star$:
+		\[
+		[2\ 1\ 6\ 8\ 5\ 3\ 7\ 4\ 9\ 10]
+		\]\\
+		The ordering after the second 8$^\star$:
+		\[
+		[2\ 3\ 8\ 1\ 6\ 9\ 5\ 7\ 4\ 10]
+		\]
+		\begin{center}
+			\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c||c|} \hline
+				8 & 6 & 3 & 7 & 5 & 5 & 2 & 6 & 2 & 8 & 3 & 9 & 3 & 8 & Total \\ \hline
+				8 & 7 & 3 & 8 & 8 & 4 & 4 & 6 & 2 & 7 & 6 & 9 & 3 & 6 &  81\\ \hline
+			\end{tabular}
+		\end{center}
+		
+	\end{enumerate}
+	
+\end{document}

@@ -1,0 +1,112 @@
+\documentclass[12pt]{article}
+
+%\usepackage{algo}
+\usepackage{tikz,fullpage,url,amssymb,amsmath,epsfig,color,xspace,alltt,mathtools}
+\usetikzlibrary{shapes,chains,positioning}
+\usepackage[pdftitle={CS 240 Assignment 2},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+%\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf Assignment 2 Problem 5}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	In this question, we generalize \textit{quickSelect1} to work on two input arrays. 
+	Let the resulting algorithm be called \emph{quickSelect2Arrays(A,B,k)}.
+	Arrays $A$ and $B$ are of size $n$ and $m$, respectively, and $k\in \{ 0,1,...,n+m-1 \}$. 
+	Algorithm \emph{quickSelect2Arrays(A,B,k)} should return the item that would be in $C[k]$ if $C$ was the array resulting from merging arrays $A$ and $B$ and $C$ was sorted in non-decreasing order. 
+	
+	\bigskip
+	
+	\noindent Your algorithm \emph{quickSelect2Arrays(A,B,k)} must be in-place, i.e. only $O(1)$ additional space is allowed.
+	Briefly and informally (one or two sentences) argue that the time complexity of your algorithm is the same as of \emph{quickSelect1}, i.e. $O(v)$ in the average case where $v$ is the total number of elements in $A$ and $B$, i.e. $v=n+m$.\\
+	
+	
+	Solution:
+	
+	The pseudocode for quickSelect2Arrays(A,B,k):\\
+	\\
+	quickSelect2Arrays(A,B,k)\\
+	A,B: two arrays with length n,m respectively\\
+	k: the element of this postion that we want in the merging arrays.\\
+	p $\gets$ choose-pivot(A,B)\\
+	i $\gets$ partition(A,B,p)\\
+	if i = k then\\
+	\hphantom{1111} if i $<$ n then\\
+	\hphantom{11111111} return A[i]\\
+	\hphantom{1111} else\\
+	\hphantom{11111111} return B[i-n]\\
+	else if i $>$ k then\\
+	\hphantom{1111} if i $\leq$ n then\\
+	\hphantom{11111111} return quick-select1(A[0,1,...,i-1],k)\\
+	\hphantom{1111} else then\\
+	\hphantom{11111111} return quickSelect2Arrays(A,B[0,1,...,i-n-1],k)\\
+	else if i $<$ k then\\
+	\hphantom{1111} if i $\geq$ n-1 then\\
+	\hphantom{11111111} return quick-select1(B[i-n+1,...,n-1],k-(i+1))\\
+	\hphantom{1111} else then\\
+	\hphantom{11111111} return quickSelect2Arrays(A[i+1,...,n-1],B,k-(i+1))\\
+	\\
+	\\
+	choose-pivot(A,B)\\
+	A,B: two arrays with length n,m respectively\\
+	if B empty then\\
+	\hphantom{1111} return A.size()-1\\
+	else then\\
+	\hphantom{1111} return A.size()+B.size()-1\\
+	\\
+	\\
+	partition(A,B,p)\\
+	A,B: array of size n,m respectively\\
+	p: integer such that 0$\leq$p$\leq$m+n-1\\
+	if p $<$ n then\\
+	\hphantom{1111} swap(A[p], B[m-1])\\
+	else then\\
+	\hphantom{1111} swap(B[p-n], B[m-1])\\
+	i$\gets$-1, j$\gets$m+n-1, v$\gets$B[m-1]\\
+	loop\\
+	\hphantom{1111} do i$\gets$i+1 while (i$<$n and A[i]$<$v) or (i$\geq$n and B[i-n]$<v$)\\
+	\hphantom{1111} do j$\gets$j-1 while ((j$\geq$i) and ((j$<$n and A[j]$>$v) or (j$\geq$n and B[j-n]$>$v)))\\
+	\hphantom{1111} if i$\geq$j then break\\
+	\hphantom{1111} else if i$<$n and j$<$n  swap(A[i],A[j])\\
+	\hphantom{1111} else if i$<$n and j$\geq$n  swap(A[i],A[j-n])\\
+	\hphantom{1111} else if i$\geq$n and j$<$n  swap(B[i-n],A[j])\\
+	\hphantom{1111} else if i$\geq$n and j$\geq$n  swap(B[i-n],B[j-n])\\
+	end loop\\
+	if i$<$n\\
+	\hphantom{1111} swap(B[m-1], A[i])\\
+	else\\
+	\hphantom{1111} swap(B[m-1], B[i-n])\\
+	return i\\
+	
+	The previous algorithm is just seems A and B are a array that been merged together but without creating a new array to ensure it is in-place. We achieve it by let the index number i to be i-A.size() if i exceed the size of A. Since we are assuming they are a single array, and do everything same with quick-select1 except the index(with a constant time conversion). Therefore, the time complexity of the algorithm is the same as of quickSelect1(ie. $O(n)$)).
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

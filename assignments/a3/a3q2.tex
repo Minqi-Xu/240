@@ -1,0 +1,125 @@
+\documentclass[12pt]{article}
+%\usepackage{algpseudocode} 
+%\usepackage{algo}
+\usepackage{fullpage,url,amssymb,epsfig,color,xspace,tikz,amsmath}
+\usetikzlibrary{shapes,positioning,calc,chains}
+\usepackage[pdftitle={CS 240 Assignment 3},%
+pdfsubject={University of Waterloo, CS 240, Fall 2021},%
+pdfauthor={MP}]{hyperref}
+\RequirePackage{pstricks,pst-node,pst-tree} % draw trees, requires using xetex
+\newlength{\nodeLength}
+\newcommand{\Node}{A}
+\newcommand{\setnode}[1]{
+	\settowidth{\nodeLength}{#1}
+	\renewcommand{\Node}[1]{
+		\Tcircle[name=#1]{\makebox[\nodeLength]{##1}}
+	}
+}
+\setnode{99}
+
+% \snode{ID}{NUMBER} becomes \node{ID}[item]{\ensuremath{NUMBER}}
+\newcommand{\snode}[2]{\node(#1)[item]{\ensuremath{#2}}}
+
+% \nodelabel{SUBSCRIPT} becomes \node[label]{\ensuremath{S_SUBSCRIPT}}
+\newcommand{\nodelabel}[1]{\node[label]{\ensuremath{S_#1}}}
+
+\newcommand{\quesbox}[2]{\begin{center} \framebox[.5\textwidth]{%
+			\raisebox{-5mm}[0mm][#1]{\begin{minipage}[t]{.45\textwidth}%
+					{\normalsize\sf #2}{\phantom{ans}}\end{minipage}}} \end{center}}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\renewcommand{\thesubsection}{Problem \arabic{subsection}}
+\definecolor{typo}{rgb}{0.75,0,0}
+\definecolor{care}{rgb}{0,0,0}
+\begin{document}
+	
+	\begin{center}
+		{\Large\bf Assignment 3 Problem 2}\\
+		\vspace{3mm}
+	\end{center}
+	
+	\definecolor{care}{rgb}{0,0,0}
+	\def\question#1{\item[\bf #1.]}
+	\def\part#1{\item[\bf #1)]}
+	\newcommand{\pc}[1]{\mbox{\textbf{#1}}} % pseudocode
+	
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Problem 2
+	
+	In this question, we want to add support for an operation {\tt ithSuccessor} on AVL trees (in addition to the standard operations {\tt insert, delete, find}).
+	The operation {\tt ithSuccessor} has two parameters, $x$ and $i \ge 0$, and returns the $i$th inorder successor of the node $x$.
+	If $i = 0$, then the node $x$ itself is returned.
+	You may assume that all input is valid; i.e. the successor exists (but may not be in the subtree rooted at $x$).
+	
+	We assume that the nodes have the following fields:
+	\begin{itemize}
+		\item {\tt key} -- the key of the node;
+		\item {\tt left} -- pointer to the left child;
+		\item {\tt right} -- pointer to the right child;
+		\item {\tt balance} -- balance factor of the node;
+		\item {\tt parent} -- pointer to the parent of the node;
+		\item {\tt isLeft} -- is true if the node is a left child of its parent;
+		\item {\tt isRight} -- is true if the node is a right child of its parent;
+		\item {\tt numLeft} -- holds the number of nodes in the left subtree of the node;
+		\item {\tt numRight} -- holds the number of nodes in the right subtree of the node.
+	\end{itemize}
+	
+	\medskip
+	
+	\begin{enumerate}
+		
+		\part{a} Give an algorithm {\tt ithNode(x, i)} which returns the $i$th inorder node in the subtree rooted at $x$.
+		For example, suppose the subtree contains $m$ nodes, when $i=1$, the minimum element in the subtree is returned and when $i=m$ the maximum element in the subtree is returned.
+		You may assume that the subtree has at least $i$ elements.
+		Your algorithm should take worst-case $O(\log(m))$ time.
+		Briefly justify that your algorithm achieves this runtime.\\
+		
+		The algorithmn of ithNode(x, i) should do the following:\\
+		if i = the number of nodes in the left subtree + 1, then return x\\
+		else if the number of nodes in the left subtree of x is less than i, then recursively call ithNode() but with x's right child and i-x.numLeft-1
+		else if the number of nodes in the left subtree of x is greater than or equal to i, then recursively call ithNode() but with x's left child and same i.
+		
+		The pseudo-code should be the following:\\
+		ithNode(x, i)\\
+		\hphantom{1111}if(i = x.numLeft + 1) then return x\\
+		\hphantom{1111}else if(i $>$ x.numLeft) then\\
+		\hphantom{11111111} ithNode(x.right, i-x.numLeft-1)\\
+		\hphantom{1111}else if(i $\leq$ x.numLeft) then\\
+		\hphantom{11111111} ithNode(x.left, i)\\
+		
+		The recursion will terminate on the leaves, although sometimes it will terminate earlier, we consider the worst-case which means that ithNode() terminate on a leaf. Since the function runs on a AVL-tree, and from lecture, we know that the height h of a m-node AVL-tree is $\Theta(\log m)$, for each recursion, what we do is judge the ith inorder node is in the left or right subtree and then we move to the corresponding subtree which has a height 1 less. And the other operations are in the constant time, therefore, the algorithm has runtime in the worst-case $\Theta(height) = \Theta(\log m)$\\
+		
+		\part{b} Give the algorithm for {\tt ithSuccessor(x, i)} for an AVL tree with $n$ nodes.  
+		Your algorithm should take worst-case $O(\log(n))$ time and must use {\tt ithNode(x, i)} from above.
+		Briefly justify that your algorithm achieves this runtime.\\
+		
+		The ithSuccessor(x,i) should do the following:\\
+		We firstly judge whether i is less or equal to the number of nodes in the right subtree of x, if so, we directly call ithNode(x.right, i), if not, we move upwards(towards the root) to the ancestors of x, until we find a node (say y) that x is in the left subtree of y, then we do the exactly same thing as we did for x, but this time we consider if i = x.right + 1, then return y, else if i $\leq$ x.right + 1 + y.right, and call ithNode(y.right, i-1-x.right).
+		
+		The pseudo-code should be the following:\\
+		ithSuccessor(x, i)\\
+		\hphantom{1111} if(i <= x.numRight) then\\
+		\hphantom{11111111} return ithNode(x.right, i)\\
+		\hphantom{1111} temp $\gets$ x.numRight\\
+		\hphantom{1111} y $\gets$ x\\
+		\hphantom{1111} while(true)\\
+		\hphantom{11111111} if(y.isLeft)\\
+		\hphantom{111111111111} y = y.parent\\
+		\hphantom{111111111111} if(i $\leq$ temp + 1 + y.numRight) break\\
+		\hphantom{111111111111} temp = temp + 1 + y.numRight\\
+		\hphantom{11111111} else\\
+		\hphantom{111111111111} y = y.parent\\
+		\hphantom{1111} if(i = temp + 1) return y\\
+		\hphantom{1111} else return ithNode(y.right, i - 1 - temp)\\
+		
+		This algorithm is in $O(\log n)$, because what we do is find the ancestors of a node and calling ithNode() only once. And other statements in the algorithm are in constant time, therefore, in the worst-case, if we starting from a deepest leaf, and find the ancestors to the root, then call ithNode() at root, we have the running time $\Theta(height) + \Theta (\log m)$ where m is the number of node in the right subtree of root. We know that height h is $\Theta(\log n)$ and m is less than n which implies $m \in O(n)$. Therefore, the running time for the algorithm should be $\Theta(\log n) + \Theta(\log O(n)) = O(\log n)$
+		
+	\end{enumerate}
+	
+	
+	
+	
+	
+\end{document}
